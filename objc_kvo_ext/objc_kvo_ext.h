@@ -24,16 +24,16 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef Dispatch_United_objc_kvo_ext_h
-#define Dispatch_United_objc_kvo_ext_h
+#ifndef _objc_kvo_ext_h
+#define _objc_kvo_ext_h
 
 #import <objc/runtime.h>
 
-#define add_observer(__X__) \
-NSMutableDictionary * __observer_values_##__X__ = objc_getAssociatedObject(self, "__tmp__observers_dictionary__"); \
+#define add_observer_o(__OBJ__,__X__) \
+NSMutableDictionary * __observer_values_##__X__ = objc_getAssociatedObject(__OBJ__, "__tmp__observers_dictionary__"); \
 if (!__observer_values_##__X__) { \
 __observer_values_##__X__ = [NSMutableDictionary dictionary]; \
-objc_setAssociatedObject(self, "__tmp__observers_dictionary__", __observer_values_##__X__, OBJC_ASSOCIATION_RETAIN_NONATOMIC); \
+objc_setAssociatedObject(__OBJ__, "__tmp__observers_dictionary__", __observer_values_##__X__, OBJC_ASSOCIATION_RETAIN_NONATOMIC); \
 } \
 BOOL __tmp_value_##__X__ = [[__observer_values_##__X__ valueForKey:[NSString stringWithFormat:@"%s", #__X__]] boolValue];\
 if (!__tmp_value_##__X__) {\
@@ -41,16 +41,19 @@ if (!__tmp_value_##__X__) {\
 } \
 if (!__tmp_value_##__X__)
 
-#define remove_observer(__X__) \
-NSMutableDictionary * __observer_values_##__X__ = objc_getAssociatedObject(self, "__tmp__observers_dictionary__"); \
+#define remove_observer_o(__OBJ__, __X__) \
+NSMutableDictionary * __observer_values_##__X__ = objc_getAssociatedObject(__OBJ__, "__tmp__observers_dictionary__"); \
 if (!__observer_values_##__X__) { \
 __observer_values_##__X__ = [NSMutableDictionary dictionary]; \
-objc_setAssociatedObject(self, "__tmp__observers_dictionary__", __observer_values_##__X__, OBJC_ASSOCIATION_RETAIN_NONATOMIC); \
+objc_setAssociatedObject(__OBJ__, "__tmp__observers_dictionary__", __observer_values_##__X__, OBJC_ASSOCIATION_RETAIN_NONATOMIC); \
 } \
 BOOL __tmp_value_##__X__ = [[__observer_values_##__X__ valueForKey:[NSString stringWithFormat:@"%s", #__X__]] boolValue];\
 if (__tmp_value_##__X__) {\
 [__observer_values_##__X__ setValue:@(NO) forKey:[NSString stringWithFormat:@"%s", #__X__]]; \
 } \
 if (__tmp_value_##__X__)
+
+#define add_observer(__X__) add_observer_o(self,__X__)
+#define remove_observer(__X__) remove_observer_o(self, __X__)
 
 #endif
